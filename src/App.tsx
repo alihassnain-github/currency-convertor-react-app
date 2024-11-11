@@ -1,3 +1,5 @@
+import { currencies } from "./components/data";
+import { useToast } from "@/hooks/use-toast"
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import AmountInput from "./components/amount-input";
 import CurrencyInputs from "./components/currency-inputs";
@@ -12,6 +14,22 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<null | number>(null);
 
+  const { toast } = useToast()
+
+  // toggle selected currencies 
+  const toggleSelection = () => {
+    setFromSelected(toSelected)
+    setToSelected(fromSelected)
+  }
+
+
+  // helper function to get currency names
+  const getCurrencyName = (code: string) => {
+    const currency = currencies.find((currency) => currency.code === code)
+    return currency ? currency.name : code
+  }
+
+  // call the api to show result
   const convertCurrency = useCallback(async () => {
     setLoading(true)
 
@@ -19,10 +37,15 @@ export default function App() {
     try {
       const response = await fetch(`${url}&base_currency=${fromSelected}`)
       const obj = await response.json()
+      console.log(obj);
       const rate = obj.data[toSelected].value
-      setResult(rate * Number(amount.trim()))
+      setResult(rate * Number(amount.replace(/\s+/g, '')))
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      })
     }
 
     setLoading(false)
@@ -54,6 +77,7 @@ export default function App() {
             setToSelected={setToSelected}
             fromSelected={fromSelected}
             setFromSelected={setFromSelected}
+            toggleSelection={toggleSelection}
           />
           <Button disabled={loading} type="submit" className="my-4">
             {loading ? (
@@ -67,8 +91,8 @@ export default function App() {
         {
           result && (
             <div className="mt-2">
-              <span className="font-semibold text-gray-400">{amount} {fromSelected} =</span>
-              <h4 className="text-xl font-semibold mt-2">{result} {toSelected}</h4>
+              <span className="font-semibold text-sm text-gray-400">{amount.replace(/\s+/g, '')} {getCurrencyName(fromSelected)} =</span>
+              <h4 className="text-md font-semibold mt-2">{result} {getCurrencyName(toSelected)}</h4>
             </div>
           )
         }

@@ -15,10 +15,11 @@ type SelectedCurrencyProps = {
     toSelected: string,
     setToSelected: (value: string) => void,
     fromSelected: string,
-    setFromSelected: (value: string) => void
+    setFromSelected: (value: string) => void,
+    toggleSelection: () => void
 }
 
-export default function CurrencyInputs({ fromSelected, setFromSelected, toSelected, setToSelected }: SelectedCurrencyProps) {
+export default function CurrencyInputs({ fromSelected, setFromSelected, toSelected, setToSelected, toggleSelection }: SelectedCurrencyProps) {
     return (
         <div>
             <div className="my-4">
@@ -47,7 +48,7 @@ export default function CurrencyInputs({ fromSelected, setFromSelected, toSelect
                     </SelectContent>
                 </Select>
             </div>
-            <Button variant="outline" size="icon" className="mx-auto block">
+            <Button onClick={toggleSelection} type="button" variant="outline" size="icon" className="mx-auto block">
                 <ArrowLeftRight className="mx-auto cursor-pointer" />
             </Button>
             <div className="my-4">

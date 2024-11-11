@@ -117,5 +117,6 @@ export const currencies = [
     { code: "PKR", name: "Pakistani Rupee" },
     { code: "PLN", name: "Polish Zloty" },
     { code: "PYG", name: "Paraguayan Guarani" },
-    { code: "QAR", name: "Cardano" }
+    { code: "QAR", name: "Cardano" },
+    { code: "USD", name: "United States dollar" }
 ]
